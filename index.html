@@ -39,29 +39,108 @@
         </div>
 
         <h3>
-<a id="welcome-to-this-project-webpage" class="anchor" href="#welcome-to-this-project-webpage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to this project webpage.</h3>
+<a id="welcome-the-doorpy-project-webpage" class="anchor" href="#welcome-the-doorpy-project-webpage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome the DoorPy project webpage.</h3>
 
-<p>My goal of this project was to create a doorbell system which would alert me when someone is at my door. In addition, I would like to notify people waiting at the door. As I live in an apartment, people (especially delivery guys) would leave in a moment even before I could get to my door. My hopes are that a little screen would keep them mesmerised for long enough, so I can go downstairs. Or simply deny them with a message that I am not around.</p>
+<p>My goal of this project was to create a doorbell system using Python (DoorPy) which would alert me when someone is at my door. In addition, I would like to notify people waiting at the door. As I live in an apartment, people (especially delivery guys) would leave in a moment even before I could get to my door. My hopes are that a little screen would keep them mesmerised for long enough, so I can go downstairs. Or simply deny them with a message that I am not around.</p>
 
-<h6>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Designer Templates</h6>
+<p>This project is a work in progress, below is indicated how far I currently am:</p>
 
-<p>We’ve crafted some handsome templates for you to use. Go ahead and click 'Continue to layouts' to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved.</p>
-
-<h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating pages manually</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<ul>
+<li>[x] Connect button to GPIO pins RPi.</li>
+<li>[x] Write initial script.</li>
+<li>[ ] Attach Display-O-Tron 3000 (Dot3K).</li>
+<li>[ ] Expand script to output on Dot3K.</li>
+<li>[ ] Adding something smart to notify me!</li>
+<li>[ ] Add networking capabilities between two RPis.</li>
+<li>[ ] Round up.
+I am not at all a developer, I just like Python and use this project as something to learn from. Especially GPIO got my interest (physical computing, yay <img class="emoji" title=":sparkles:" alt=":sparkles:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2728.png" height="20" width="20" align="absmiddle">), as I have never worked with electronics in combination with a Raspberry Pi this seemed like a nice learning experience. I have programmed before, but like I said, not on an epic scale. If you have any comments/advice/questions, just let me know.</li>
+</ul>
 
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
 
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+<p>What you will need for this project:
+1. Raspberry Pi (2 if you want to interact [future work])
+2. Wireless doorbell (can be found really cheap, I have bought a 'AC Mini wireless door chime QH-832AC')
+3. Display-o-Tron 3000 (@ <a href="http://shop.pimoroni.com/products/displayotron-3000">Pimoroni</a>)
+4. (Optionally) Pibow case to neatly fit your Pi in.
+5. (Optionally) </p>
+
+<h3>
+<a id="connecting-to-a-raspberrys-gpio-pins" class="anchor" href="#connecting-to-a-raspberrys-gpio-pins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Connecting to a Raspberry's GPIO pins</h3>
+
+<p>Wel <em>that</em> was easy... Connect the button to the pins, import the Python library and off you go!</p>
+
+<p>Okay, hold you horses <em>before</em> you fry your Raspberry! Let us get some things straight:</p>
+
+<ul>
+<li>GPIO?</li>
+<li>RPi pin map</li>
+<li>Connecting</li>
+<li>Using the GPIO library</li>
+</ul>
+
+<h3>
+<a id="write-initial-script" class="anchor" href="#write-initial-script" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write initial script.</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="attach-display-o-tron-3000-dot3k" class="anchor" href="#attach-display-o-tron-3000-dot3k" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attach Display-O-Tron 3000 (Dot3K).</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="expand-script-to-output-on-dot3k" class="anchor" href="#expand-script-to-output-on-dot3k" aria-hidden="true"><span class="octicon octicon-link"></span></a>Expand script to output on Dot3K.</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="something-smart-to-notify-me" class="anchor" href="#something-smart-to-notify-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Something smart to notify me.</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="add-networking-capabilities-between-two-rpis" class="anchor" href="#add-networking-capabilities-between-two-rpis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add networking capabilities between two RPis.</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="round-up" class="anchor" href="#round-up" aria-hidden="true"><span class="octicon octicon-link"></span></a>Round up.</h3>
+
+<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+
+<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+
+<h3>
+<a id="future-wishes" class="anchor" href="#future-wishes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future wishes</h3>
+
+<p>Of course, there is more to make/hack/break than this! I still have some wishes for my beloved DoorPy:</p>
+
+<ul>
+<li>Camera feed</li>
+<li>Web-interface backend</li>
+</ul>
+
+<h3>
+<a id="contact--references" class="anchor" href="#contact--references" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contact &amp; References</h3>
+
+<p>Credits where credits are due:</p>
+
+<ul>
+<li>
+<a href="http://shop.pimoroni.com">PiMoRoNi</a> - An awesome shop for all your Raspberry Pi needs! I got my cables, case (Pibow <img class="emoji" title=":heart:" alt=":heart:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" height="20" width="20" align="absmiddle">), Display-O-Tron 3000 and some miscellaneous stuff from them. <em>Note:</em> Ever wondered where their name comes from? Pirate-Monkey-Robot-Ninja. Yes, <a href="http://shop.pimoroni.com/pages/frequently-asked-questions">really</a>!</li>
+</ul>
       </section>
 
     </div>
