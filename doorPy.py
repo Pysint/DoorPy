@@ -8,7 +8,6 @@ from settings import gpio_bell, logging, debug, timeout, txt_security, txt_press
 
 # Set GPIO
 GPIO.setmode(GPIO.BCM)
-gpio_bell = sett.gpio_bell
 GPIO.setup(gpio_bell, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 if logging == "txt":
@@ -62,8 +61,9 @@ def doorbell():
 try:
     while True:
         print("\n\n"+txt_pressme)
-        #GPIO.wait_for_edge(gpio_bell, GPIO.FALLING)
+        GPIO.wait_for_edge(gpio_bell, GPIO.FALLING)
         doorbell()
+        time.sleep(sett.sleepaddition)
 
 except KeyboardInterrupt:
     conn.close()

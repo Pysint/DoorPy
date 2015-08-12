@@ -161,7 +161,7 @@ def login():
                                         else:   
                                                 session['admin'] = False 
                                         session['user'] = request.form['username']
-                                        flash('Welcome ' + name, 'info') 
+                                        flash('Welcome ' + name, 'success') 
                                         return redirect(url_for('home'))
                                 else:   
                                         flash('Invalid username and/or password','error')
