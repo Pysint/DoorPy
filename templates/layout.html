@@ -27,15 +27,15 @@
       {% if session.logged_in %}
         <div id="navbar" class="navbar-collapse navbar-left collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('status') }}">Doorbell status</a></li>
-                <li><a href="{{ url_for('log') }}">Doorbell logs</a></li>
+                <li {% if page == 'status' %} class=active {% endif %}><a href="{{ url_for('status') }}">Doorbell status</a></li>
+                <li {% if page == 'log' %} class=active {% endif %}><a href="{{ url_for('log') }}">Doorbell logs</a></li>
             </ul>
         </div>
         {% endif %}
         <div id="navbar" class="navbar-collapse navbar-right collapse">
           <ul class="nav navbar-nav">
             {% if session.logged_in %}
-            <li class="dropdown">
+            <li class="dropdown {% if page == 'administration' %} active {% endif %}">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administration<span class="caret"></span></a>
           
          <ul class="dropdown-menu" role="menu">
@@ -43,15 +43,15 @@
                 <li><a href="{{ url_for('add_news') }}">Add news</a></li>
                 <li><a href="{{ url_for('add_user') }}">Add user</a></li>
             <li class="divider"></li>
-                <li class="dropdown-header">Management</li>
+                <li class="dropdown-header {% if page == 'administration' %} active {% endif %}">Management</li>
         {% endif %}
         <li><a href="{{ url_for('account') }}">Manage account</a></li>
           </ul>
 {% endif %}
 {% if not session.logged_in %}
-    <li><a href="{{ url_for('login') }}">Log in</a></li>
+    <li {% if page == 'login' %} class=active {% endif %}><a href="{{ url_for('login') }}">Log in</a></li>
 {% else %}
-    <li><a href="{{ url_for('logout') }}">Log out</a></li>
+    <li {% if page == 'login' %} class=active {% endif %}><a href="{{ url_for('logout') }}">Log out</a></li>
 {% endif %}
           </ul>
         </div><!--/.nav-collapse -->

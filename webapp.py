@@ -10,6 +10,7 @@ import settings as sett
 DATABASE = sett.database
 DEBUG = sett.debug
 SECRET_KEY = sett.secretkey
+SESSION_COOKIE_NAME = 'DoorPy Webapp'
 
 # Create application
 app = Flask(__name__)
@@ -48,7 +49,7 @@ def home():
     	entries = [dict(title=row[1], content=row[2], date=row[3]) for row in cur.fetchall()]
         return render_template('home.html', entries=entries)
     else:
-    	return render_template('home.html')
+    	return render_template('home.html', page='home')
 
 @app.route('/add-news', methods=['GET','POST'])
 def add_news():
@@ -63,7 +64,7 @@ def add_news():
     	flash('Newsitem successfully posted', 'success')
     	return redirect(url_for('home'))
     else: 
-   	return render_template('addnews.html')
+   	return render_template('addnews.html', page='administration')
 
 @app.route('/add-user', methods=['GET','POST'])
 def add_user():
@@ -84,7 +85,7 @@ def add_user():
     		flash('User successfully added', 'success')
 		return redirect(url_for('home'))
     else: 
-   	return render_template('adduser.html')
+   	return render_template('adduser.html', page='administration')
 
 @app.route('/account', methods=['GET','POST'])
 def account():
@@ -114,13 +115,13 @@ def account():
 	else:
 		flash('Error, not all field filled in.', 'error')
 	
-    return render_template('account.html', user=fromusers)
+    return render_template('account.html', user=fromusers, page='administration')
 
 @app.route('/status')
 def status():
     if not session.get('logged_in'):
         abort(404)
-    return render_template('status.html')
+    return render_template('status.html', page='status')
 
 @app.route('/log')
 def log():
@@ -129,7 +130,7 @@ def log():
     else:
     	cur = g.db.execute('select * from doorlogs order by id asc')
     	logs = [dict(id=row[0], date=row[1], description=row[2], note=row[3]) for row in cur.fetchall()]
-        return render_template('log.html', logs=logs)
+        return render_template('log.html', logs=logs, page='log')
 
 @app.route('/delete-log/<log_id>', methods=['POST'])
 def delete_log(log_id):
@@ -169,7 +170,7 @@ def login():
                                 flash('Invalid username and/or password','error')
                 else:
                         flash('Please fill out all fields','error')
-        return render_template('login.html')
+        return render_template('login.html', page='login')
 
 @app.route('/profile/<profile_id>')
 def profile_details(profile_id):
