@@ -1,35 +1,40 @@
 {% extends "layout.html" %}
-{% block body %}
-<div class=container>
+    {% block body %}
+    <div class=container>
 
     {% if session.logged_in %}
     <div class="page-title">
-            <h3>Doorbell log</h3>
-        </div>
-        <table class="table table-striped table-hover">
-                <thead>
-                            <tr>
-                                            <th>#</th>
-                                                        <th>Date</th>
-                                                                    <th>Action</th>
-                                                                            </tr>
-                                                                                </thead>
-                                                                                {% for logs in doorlog %}   
-                                                                                    <tbody>
-                                                                                                <tr>
-                                                                                                              <td>{{ loop.index }}</td>
-                                                                                                                        <td>{{ logs.date }}</td>
-                                                                                                                                  <td>{{ logs.action }}</td>
-                                                                                                                                        </tr>
-                                                                                                                                                {% else %}
-                                                                                                                                                        <tr>
-                                                                                                                                                                      <td>-</td>
-                                                                                                                                                                                <td>-</td>
-                                                                                                                                                                                          <td>-</td>
-                                                                                                                                                                                                </tr>
-                                                                                                                                                                                                    {% endfor %}
-                                                                                                                                                                                                        </tbody>          
-                                                                                                                                                                                                        {% else %}
-                                                                                                                                                                                                           Please <a href="{{ url_for('login') }}">log in</a> to access this webpage.
-                                                                                                                                                                                                           {% endif %}
-                                                                                                                                                                                                           {% endblock %}
+        <h3>Doorbell log</h3>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Note</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for logs in logs %}   
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ logs.date }}</td>
+                    <td>{{ logs.description }}</td>
+                    <td>{{ logs.note }}</td>
+                    <td><form action="/delete-log/{{ logs.id }}" method="post"><input type="submit" value="X"></form></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            {% endfor %}
+        </tbody>          
+        {% else %}
+        Please <a href="{{ url_for('login') }}">log in</a> to access this webpage.
+        {% endif %}
+   {% endblock %}
