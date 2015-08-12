@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class=container>
+
+  {% if session.logged_in %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Add new user</h3>
+	</div>
+<div class="panel-body">
+   <form role=form action="{{ url_for('add_user') }}" method=post>
+	<div class="form-group">      
+        <label for="rname">Name</label>
+        <input type=text size=30 name=rname class="form-control"> 
+        <label for="uname">Username</label>
+        <input type=text size=30 name=uname class="form-control">
+        <label for="pwd">Password</label>
+        <input type=password size=30 name=pwd class="form-control">
+        <label for="pwdc">Password verify</label>
+        <input type=password size=30 name=pwdc class="form-control">
+    	</div>
+	<input class='btn btn-success' type=submit value='Add user'>
+    </form>
+  </div>
+</div>
+  {% endif %}
+</div>
+{% endblock %}

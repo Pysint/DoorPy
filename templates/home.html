@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class=container>
+
+{% if session.logged_in %}
+<div class="page-title">
+	<h3>News</h3>
+</div>
+        {% for entry in entries %}
+                <div class="well"><b>{{ entry.title }} </b><i style="font-size:small;">({{ entry.date }})</i>
+<br/><br/>{{ entry.content }}</div>
+        {% else %}
+        	Oh my, such awesome website... No content?! D:
+		Admin, Why u no work?!
+	{% endfor %}
+
+{% else %}
+<div class="page-title">
+    <h3> {{ g.sitename }} - {{ g.siteslogan }} </h3>
+</div>
+<p>Welcome! Please login to access further features</p>
+</div>
+{% endif %}
+{% endblock %}

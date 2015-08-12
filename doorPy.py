@@ -1,37 +1,23 @@
+#!/usr/bin/python
 from datetime import datetime
 import RPi.GPIO as GPIO
 import time, os, sys 
 import sqlite3
+import settings as sett
+from settings import gpio_bell, logging, debug, timeout, txt_security, txt_pressme, txt_ring, txt_wait, txt_coming, txt_away1, txt_away2, txt_away3
 
 # Set GPIO
 GPIO.setmode(GPIO.BCM)
-gpio_bell = 18     #Doorbell button GPIO pin number
-GPIO.setup(button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+gpio_bell = sett.gpio_bell
+GPIO.setup(gpio_bell, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# Text variables, for easy editing of output.
-txt_security    = "[Security system online]"
-txt_pressme     = "Welcome, please press doorbell."
-txt_ring        = "Doorbell is ringing..."
-txt_wait        = "Your ring is being processed, hang in there!"
-txt_coming      = "I'm on my way!"
-txt_away1       = "Sorry, we are currently not at home" 
-txt_away2       = "(or we just don't feel like coming downstairs)." 
-txt_away3       = "Please deliver packages at out neighbors (no 11)." 
-
-# Logging settings, only SQLite can be used for web interface.
-# Choose 'db' or 'txt'.
-logging = "txt"
 if logging == "txt":
-    logfile = "doorbell-log.txt"
+    logfile = sett.logfile
 elif logging == "db":
-    conn = sqlite.connect('doorbell.db')
+    conn = sqlite3.connect(sett.database)
     c = conn.cursor()
 else:
     sys.exit("[Error] Please choose a proper logging format.")
-
-# Other vars;.
-debug = True            #Enable/disable debugging
-timeout = 1             #Time (seconds) to wait till next message
 
 #############
 # FUNCTIONS #
@@ -47,7 +33,8 @@ def log(txt):
             f.write(ts()+" - "+txt+"\n")
             f.close
     elif logging == "db":
-        print("here comes sql cmmds")
+        c.execute("INSERT INTO doorlogs (date, description, note) VALUES (?,'Doorbell rang by someone.','')", (ts(),) )
+        conn.commit()
     else:
         sys.exit("Please choose a proper logging format.")
         
@@ -75,11 +62,13 @@ def doorbell():
 try:
     while True:
         print("\n\n"+txt_pressme)
-        GPIO.wait_for_edge(gpio_bell, GPIO.FALLING)
+        #GPIO.wait_for_edge(gpio_bell, GPIO.FALLING)
         doorbell()
 
 except KeyboardInterrupt:
+    conn.close()
     GPIO.cleanup()
 
 finally:
+    conn.close()
     GPIO.cleanup()

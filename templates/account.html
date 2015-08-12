@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class=container>
+<div class="page-title">
+	<h3>Account settings</h3>
+</div>
+<div class="panel panel-default">
+{% for entry in user %}
+        <div class="panel-heading">
+                <h3 class="panel-title">{{ entry.realname }}'s account</h3>
+        </div>
+<div class="panel-body">
+   <form role="form" action="{{ url_for('account') }}" method=post>
+	<div class="form-group">
+		<label for="id" class="col-sm-2 control-label">ID</label> 
+		<div class="col-sm-10">
+			<input type="text" name="id" class="form-control" disabled value="{{ entry.id }}"></input> 
+      		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="uname" class="col-sm-2 control-label">Username</label>
+		<div class="col-sm-10">
+			<input type="text" name="uname" class="form-control" disabled value="{{entry.username}}"></input>
+		</div>
+	</div>
+
+	<div>
+		<label for="rname" class="col-sm-2 control-label">Name</label>
+		<div class="col-sm-10">
+			<input type="text" name="rname" class="form-control" disabled value="{{ entry.realname }}"></input>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="pwold">Change password</label>
+		<input type=password size=30 name=pwold placeholder="Old password" class="form-control">
+        </div>
+	<div class="form-group">	
+		<input type=password size=30 name=pwnew1 placeholder="New password" class="form-control">
+	</div>
+        <div class="form-group">
+        	<input type=password size=30 name=pwnew2 placeholder="Verify new password" class="form-control">
+        </div>
+	<input class='btn btn-success' type=submit value='Change password'>
+      
+    </form>
+  </div>
+</div>
+	{% endfor %}
+</div>
+{% endblock %}
