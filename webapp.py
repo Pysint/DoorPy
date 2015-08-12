@@ -190,7 +190,7 @@ def logout():
     if not session.get('logged_in'):
         abort(404)
     session.pop('logged_in', None)
-    flash('You were logged out', 'info')
+    flash('You were logged out', 'success')
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

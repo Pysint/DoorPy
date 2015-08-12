@@ -118,9 +118,9 @@ def doorbell():
     # Clear LCD and adjust information
     lcd.clear()
     backlight.rgb(255,0,0)
-    lcd.set_cursor_position(2,0)
+    lcd.set_cursor_position(0,0)
     lcd.write(txt_away1)
-    lcd.set_cursor_position(1,1)
+    lcd.set_cursor_position(0,1)
     lcd.write(txt_away2)
     lcd.set_cursor_position(0,2)
     lcd.write(txt_away3)
