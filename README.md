@@ -9,6 +9,8 @@ It uses the following applications by design:
 * Apache2 (with mod_wsgi enabled);
 * Upstart for automated (re)booting of the application.
 
+Want to know more, including pictured and what is looks like?
+Check http://pysint.github.io/DoorPy!
 # Installation
 Below a guideline for the installation of DoorPy, it might be incorrect.. Don't blame me for that!
 
