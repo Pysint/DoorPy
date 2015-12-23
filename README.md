@@ -19,7 +19,7 @@ Below a guideline for the installation of DoorPy, it might be incorrect.. Don't 
 * Setup Apache:
   * Edit `/etc/apach2/sites-enabled/doorpy.conf`, to contain the following:
   ```
-  <VirtualHost *:80>
+<VirtualHost *:80>
                 ServerName [name]
                 ServerAdmin [email]
 
