@@ -10,7 +10,7 @@ It uses the following applications by design:
 * Upstart for automated (re)booting of the application.
 
 Want to know more, including pictured and what is looks like?<br/>
-__Check http://pysint.github.io/DoorPy!__
+__Check [my Github page](http://pysint.github.io/DoorPy)!__
 
 # Installation
 Below a guideline for the installation of DoorPy, it might be incorrect.. Don't blame me for that!
