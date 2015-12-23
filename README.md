@@ -18,8 +18,8 @@ Below a guideline for the installation of DoorPy, it might be incorrect.. Don't 
 * Install dependecies by using pip:<br/>`pip install -r requirements.txt`
 * Setup Apache:
   * Edit `/etc/apach2/sites-enabled/doorpy.conf`, to contain the following:
-  ```
-<VirtualHost *:80>
+    ```
+     <VirtualHost *:80>
                 ServerName [name]
                 ServerAdmin [email]
 
@@ -39,10 +39,25 @@ Below a guideline for the installation of DoorPy, it might be incorrect.. Don't 
                         WSGIScriptReloading On
                 </Directory>
 
-        ErrorLog ${APACHE_LOG_DIR}/error.log
+                ErrorLog ${APACHE_LOG_DIR}/error.log
                 LogLevel warn
                 CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
   ```
-  * 
+  * Configure Upstart by creating `/etc/init/doorPy.conf`, which allows you to `sudo start|stop doorPy`. Therefore add the following content:
+    ```
+    # DoorPy upstart script
+
+description "DoorPy - Doorbell application for Raspberry Pi"
+author "Pysint"
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+exec python /var/www/DoorPy/doorPy.py
+respawn
+```
+  * Now restart Apache `sudo service apache2 restart` and check if you can access [ip]:80 and see the admin interface.
+* Power down your Raspberry Pi and take it apart...
+* Now connect the LED wires from the doorbell-receiver to the GPIO pin that you have defined in settings.py and another one to ground.
 
