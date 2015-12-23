@@ -48,9 +48,9 @@
 <ul>
 <li>[x] Connect button to GPIO pins RPi.</li>
 <li>[x] Write initial script.</li>
-<li>[ ] Attach Display-O-Tron 3000 (Dot3K).</li>
-<li>[ ] Expand script to output on Dot3K.</li>
-<li>[ ] Adding something smart to notify me!</li>
+<li>[X] Attach Display-O-Tron 3000 (Dot3K).</li>
+<li>[X] Expand script to output on Dot3K.</li>
+<li>[X] Adding something smart to notify me!</li>
 <li>[ ] Add networking capabilities between two RPis.</li>
 <li>[ ] Round up.</li>
 </ul>
@@ -63,7 +63,7 @@
 <p>What you will need for this project:</p>
 
 <ol>
-<li>Raspberry Pi (2 if you want to interact [future work])</li>
+<li>Raspberry Pi (2 if you want to interact with your doorPy [future work])</li>
 <li>Wireless doorbell (can be found really cheap, I have bought a 'AC Mini wireless door chime QH-832AC')</li>
 <li>Display-o-Tron 3000 (@<a href="http://shop.pimoroni.com/products/displayotron-3000">Pimoroni</a>)</li>
 <li>(Optionally) Pibow case to neatly fit your Pi in.</li>
@@ -92,9 +92,97 @@
 <h3>
 <a id="write-initial-script" class="anchor" href="#write-initial-script" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write initial script.</h3>
 
-<p>Bacon ipsum dolor amet rump pork chop short loin brisket spare ribs sausage ham. Doner biltong shank leberkas, tenderloin strip steak sausage frankfurter flank pastrami pork loin tongue picanha. Filet mignon pork belly pig turkey turducken doner rump drumstick picanha shoulder meatball pork leberkas. Filet mignon leberkas porchetta beef ribs. Short loin frankfurter t-bone pork belly bacon beef beef ribs boudin tenderloin meatball chicken rump ham.</p>
+<p>The initial script turned out to be extremely easy. Also GPIO is easy once you read a bit into it.
+It boils down to knowing your pin layout ('pinout') and having some basic knowledge of electronics.</p>
 
-<p>Shankle shoulder ham pork chop, ham hock venison porchetta. Short ribs biltong kielbasa, hamburger shankle tri-tip salami sirloin beef turkey kevin. Tongue flank bacon, drumstick sirloin doner pork loin hamburger kevin porchetta bresaola chicken spare ribs kielbasa ground round. Shank ham hock flank short ribs doner. Prosciutto venison pork, alcatra cupim tri-tip bresaola. Cow ham beef swine pork loin, jerky pork chop biltong strip steak andouille jowl.</p>
+<p>For the RPi2 the pinout is easily found online and looks like this:
+<img src="http://www.element14.com/community/servlet/JiveServlet/previewBody/73950-102-4-309126/GPIO_Pi2.png" alt="RPi2 Pinout - By Element14">
+A more interactive and really useful website with more information on the pins is <a href="http://pinout.xyz">Pinout.xyz</a>, make sure to check their site out as it is really useful. <br>
+<strong>DISCLAIMER: Please triple-check you pinout before connecting anything. Read on, understand the different state a pin can have, and also note that there is a different pinout for the RPi1 and RPi2!<br>continue reading...</strong></p>
+
+<p>The initial script ended up being something similar to this:</p>
+
+<pre><code>#!/usr/bin/python
+import RPi.GPIO as GPIO
+import time, os, sys 
+
+# Set GPIO
+gpio_bell = 21 #Doorbell button GPIO name (NOT pin#)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(gpio_bell, GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
+
+# Set an even detection on the channel to detect voltage/button presses
+GPIO.add_event_detect(gpio_bell,GPIO.FALLING)
+
+# Loop code, on detect do something
+try:
+    while True:
+        if GPIO.input(gpio_bell):
+            print "Danger, danger... High voltage!"
+            time.sleep(10) # Add
+        else:
+            pass # No input on GPIO pin, so pass 
+
+except KeyboardInterrupt:
+    print "Keyboard interrupt (ctrl+c)"
+
+except Exception as e:
+    print "Exception caught, terminating. Reason:"
+    print str(e)
+
+finally:
+    # Reset GPIO pin states 
+    GPIO.cleanup()
+</code></pre>
+
+<p>A few things might be new if you are -like me- are just starting out with GPIO on the RPi, but it is actually pretty easy. 
+This Python script is rather simple, it does something with GPIO pins and the keeps running until it detects 'high voltage' on the GPIO ping. Sleeps for a bit and then loops again, until interrupted. But let me elaborate on a few things:</p>
+
+<pre><code>...
+import RPi.GPIO as GPIO
+...
+# Set GPIO
+GPIO.setmode(GPIO.BCM)
+gpio_bell = 21 #Doorbell button GPIO name (NOT pin#)
+GPIO.setup(gpio_bell, GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
+...
+</code></pre>
+
+<p>First you will need to import all GPIO functions, luckily these are included on any Raspbian image. If not you can get the package from <a href="http://pypi.python.org/pypi/RPi.GPIO">here</a>.</p>
+
+<p>Then you set the mode to 'GPIO.BCM', which means that you are referring to the pins by the "BroadCoM" number. This is the number you see defined in <code>gpio_bell = 21</code>-part, which is the name for the pin you find on the <a href="pinout.xyz">PinoutXYZ website</a>. This allows us to  define GPIO pins by their number instead of their pin number (but you can change this if you would like otherwise, of course).</p>
+
+<p><code>GPIO.setup(gpio_bell, GPIO.IN , pull_up_down=GPIO.PUD_DOWN)</code> defines the BCM21-pin we just defined to become a so called 'pull-down'-pin. Each pin can be configured as either a 'pull-up' or 'pull-down' pin. What this boils down to an internal resitor being created to measure the state of the port. The difference between the up or down setting are simply said the following:</p>
+
+<ul>
+<li>Pull-up: Always has some current flowing through it ad has three states: ON, OFF and FLOATING.</li>
+<li>Pull-down: Is connect to ground internally and has two states: ON and OFF (high/low).
+Therefore it makes sense to pick 'Pull-down' for this setup, as we only want to know if someone rings the doorbell. And we are certainly not interested in a floating state, where you cannot do much about with logically, as it is no boolean value.</li>
+</ul>
+
+<pre><code>...
+# Set an even detection on the channel to detect voltage/button presses
+GPIO.add_event_detect(gpio_bell,GPIO.FALLING)
+...
+</code></pre>
+
+<p>Simply set the GPIO pin to detect changes, where <code>FALLING</code> means that is detected when a button is pressed (i.e. current is going through the pin to ground).</p>
+
+<pre><code>...
+# Loop code, on detect do something
+try:
+    while True:
+        if GPIO.input(gpio_bell):
+            print "Danger, danger... High voltage!"
+            time.sleep(10) # Add
+        else:
+            pass # No input on GPIO pin, so pass 
+...
+</code></pre>
+
+<p>Keep looping the code <code>pass</code>, until you measure a 'pull-down' on GPIO BCM21-pin.</p>
+
+<p>See, GPIO is pretty simple! A few lines of code and <strong>BOOM</strong> you are tinkering with electronics connect you your Raspberry Pi!</p>
 
 <h3>
 <a id="attach-display-o-tron-3000-dot3k" class="anchor" href="#attach-display-o-tron-3000-dot3k" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attach Display-O-Tron 3000 (Dot3K).</h3>
