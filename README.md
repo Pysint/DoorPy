@@ -13,7 +13,7 @@ It uses the following applications by design:
 Below a guideline for the installation of DoorPy, it might be incorrect.. Don't blame me for that!
 
 * Fulfil all dependecies:<br/>
-`apt-get install apache2 libapache2-mod-wsgi upstart`
+`apt-get install python python-pip apache2 libapache2-mod-wsgi upstart`
 * Clone the repository into `/var/www/DoorPy`.
 * Install dependecies by using pip:<br/>`pip install -r requirements.txt`
 * Setup Apache:
@@ -57,7 +57,9 @@ stop on runlevel [016]
 exec python /var/www/DoorPy/doorPy.py
 respawn
 ```
+  * Edit your `/var/www/settings.py` file, to reflect your settings. Especially make sure to write down the correct secret key in both this file and `/var/www/app.wsgi`.
   * Now restart Apache `sudo service apache2 restart` and check if you can access [ip]:80 and see the admin interface.
-* Power down your Raspberry Pi and take it apart...
+* If you are all good, power down your Raspberry Pi and take it apart.
 * Now connect the LED wires from the doorbell-receiver to the GPIO pin that you have defined in settings.py and another one to ground.
+* [ This will be extended in due time ]
 
