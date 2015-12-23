@@ -2,21 +2,24 @@
 import RPi.GPIO as GPIO
 import time, os, sys 
 import sqlite3
+import threading
+import httplib, urllib
 import settings as sett
 import dot3k.lcd as lcd
 import dot3k.backlight as backlight
 
+from os.path import isfile, join
 from datetime import datetime
-from settings import rgb_rbg, timeformat, gpio_bell, logging, debug, timeout, txt_security,\
+from settings import rgb_rbg, timeformat, gpio_bell, logging, debug, txt_security,\
 txt_pressme, txt_ring, txt_ring2, txt_wait1, txt_wait2, txt_wait3, txt_coming,\
-txt_away1, txt_away2, txt_away3, txt_package1, txt_package2, txt_package3
+txt_away1, txt_away2, txt_away3, txt_package1, txt_package2, txt_package3,\
+push_enabled, push_app_key, push_user_key, pictures_enabled, snap_url, outputpath
 
 # Set GPIO
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(gpio_bell, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(gpio_bell, GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
 
-if rgb_rbg:
-    backlight.use_rbg()
+if rgb_rbg: backlight.use_rbg()
 
 if logging == "txt":
     logfile = sett.logfile
@@ -52,7 +55,7 @@ def wait_loop(span):
 
 # Main functionis,  when idle and when button is pressed..
 def idle():
-    if debug: print "Start idle function." 
+    #if debug: print "Start idle function." 
     backlight.off()
     lcd.set_cursor_position(0,0)
     lcd.write(txt_security)
@@ -62,15 +65,50 @@ def idle():
     lcd.set_cursor_position(0,2)
     lcd.write(txt_pressme)
     time.sleep(0.5)
-    if debug: print "End idle function.\n"
+    #if debug: print "End idle function.\n"
 
+def pushover():
+    push = httplib.HTTPSConnection("api.pushover.net:443")
+    push.request("POST", "/1/messages.json",
+    urllib.urlencode({
+        "priority": "1",
+        "retry": "30",
+        "expires": "60",
+        "token": push_app_key,
+        "user": push_user_key,
+        "message": "Someone is at your door!",
+        "title": "DoorPy",
+        "url": "http://strawberry.local",
+        "url_title": "DoorPy webapp",
+    }), { "Content-type": "application/x-www-form-urlencoded" })
+    push.getresponse()
+
+def snapper():
+    #ExtRe = re.compile(r'(.+?)(\.[^.]*$|$)')
+    #filenames = [ f for f in os.listdir(outputpath) if isfile(join(outputpath,f)) ]
+    #here comes webcam picture snapping
+    print "*snap* got your picture :D"
+    #curl = "curl -k "+snap_url+" > "+outputpath+"1.jpg"
+    #os.system(curl)
+   
 def doorbell():
     GPIO.remove_event_detect(gpio_bell) # Ignore multiple clicks
     if debug: print("Start of Doorbell function\n") 
     
+    # If pushover is enabled, run as thread and continue
+    if push_enabled: 
+        t_push = threading.Thread(target=pushover, args=())
+        t_push.start()
+
+    # If taking pictures is enabled, run as thread and continue
+    if pictures_enabled: 
+        t_snap = threading.Thread(target=snapper, args=())
+        t_snap.start()
+    
     # Log the event in the databse
     if debug: print "Doorbell rang at "+ts() 
-    log("Someone was at your door!")
+    log("Someone was at your door.")
+    
     if debug: print "Event logged" 
     
     # ####### #
@@ -82,12 +120,12 @@ def doorbell():
     backlight.rgb(0,0,255)
     lcd.set_cursor_position(0,0)
     lcd.write(txt_security)
-    lcd.set_cursor_position(4,1)
+    lcd.set_cursor_position(0,1)
     lcd.write(txt_ring)
-    lcd.set_cursor_position(1,2)
+    lcd.set_cursor_position(0,2)
     lcd.write(txt_ring2)
     if debug: print("Text changed, entering wait_loop*2") 
-    wait_loop(300)
+    wait_loop(200)
     if debug: print("Wait loop done") 
     if debug: print("<< Next Phase >>\n") 
     backlight.set_graph(0)
@@ -136,7 +174,7 @@ def doorbell():
     # Clear LCD and adjust information
     lcd.clear()
     backlight.rgb(0,255,0)
-    lcd.set_cursor_position(1,0)
+    lcd.set_cursor_position(0,0)
     lcd.write(txt_package1)
     lcd.set_cursor_position(0,1)
     lcd.write(txt_package2)
@@ -148,7 +186,7 @@ def doorbell():
     if debug: print("<< End of last Phase >>\n") 
     backlight.set_graph(0)
     lcd.clear()
-
+    
     if debug: print("End of Doorbell function\n") 
     GPIO.add_event_detect(gpio_bell,GPIO.FALLING)
 
@@ -156,22 +194,37 @@ def doorbell():
 GPIO.add_event_detect(gpio_bell,GPIO.FALLING)
 
 # Loop code, on detect run doorbell()-function.
+lcd.clear()
 try:
+    z=0
     lcd.clear()
+    backlight.off()
+    backlight.set_graph(0)
     if debug: print("----Start loop----") 
     while True:
         idle()
-        if GPIO.event_detected(gpio_bell):
+        if GPIO.input(gpio_bell):
+            print "High input"
             doorbell()
+            #time.sleep(10)
+        else:
+            pass
+            #print "Low input"
 
 except KeyboardInterrupt:
-    lcd.clear()
-    backlight.off()
-    conn.close()
-    GPIO.cleanup()
+    print "Keyboard interrupt (ctrl+c)"
 
+except Exception as e:
+    print "Exception caught, terminating. Reason:"
+    print str(e)
+    
 finally:
+    # Whatever happens and script terminate:
+    # Turn off LCD & LEDs
     lcd.clear()
     backlight.off()
+    backlight.set_graph(0)
+    # Close DB connection
     conn.close()
+    # Reset GPIO pin states 
     GPIO.cleanup()

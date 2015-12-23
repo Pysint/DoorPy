@@ -34,6 +34,7 @@ def before_request():
     #Global variables
     g.sitename = sett.name
     g.siteslogan = sett.slogan
+    g.stream = sett.stream_url
 
 @app.teardown_request
 def teardown_request(exception):
@@ -45,9 +46,11 @@ def teardown_request(exception):
 @app.route('/')
 def home():
     if session.get('logged_in'):    
+    	cur = g.db.execute('select * from doorlogs order by id desc limit 5')
+    	logs = [dict(id=row[0], date=row[1], description=row[2], note=row[3]) for row in cur.fetchall()]
     	cur = g.db.execute('select * from news order by id desc, date asc')
     	entries = [dict(title=row[1], content=row[2], date=row[3]) for row in cur.fetchall()]
-        return render_template('home.html', entries=entries)
+        return render_template('home.html', entries=entries, lastlogs=logs)
     else:
     	return render_template('home.html', page='home')
 
@@ -121,14 +124,17 @@ def account():
 def status():
     if not session.get('logged_in'):
         abort(404)
-    return render_template('status.html', page='status')
+    else:
+        cur = g.db.execute('select * from doorlogs order by id desc limit 5')
+    	logs = [dict(id=row[0], date=row[1], description=row[2], note=row[3]) for row in cur.fetchall()]
+        return render_template('status.html', lastlogs=logs, page='status', stream=sett.stream_url)
 
 @app.route('/log')
 def log():
     if not session.get('logged_in'):
         abort(404)
     else:
-    	cur = g.db.execute('select * from doorlogs order by id asc')
+    	cur = g.db.execute('select * from doorlogs order by id desc')
     	logs = [dict(id=row[0], date=row[1], description=row[2], note=row[3]) for row in cur.fetchall()]
         return render_template('log.html', logs=logs, page='log')
 
@@ -136,6 +142,11 @@ def log():
 def delete_log(log_id):
     if not session.get('logged_in'):
         abort(404)
+    if log_id == "all":
+        g.db.execute("delete from doorlogs") 
+        g.db.commit()
+        flash('Door logs have been cleared.','success')
+        return redirect(url_for('log'))
     else:
         g.db.execute("delete from doorlogs where id=?", [log_id])
         g.db.commit()
@@ -163,7 +174,7 @@ def login():
                                                 session['admin'] = False 
                                         session['user'] = request.form['username']
                                         flash('Welcome ' + name, 'success') 
-                                        return redirect(url_for('home'))
+                                        return redirect(url_for('status'))
                                 else:   
                                         flash('Invalid username and/or password','error')
                         else:

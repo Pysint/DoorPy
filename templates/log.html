@@ -4,7 +4,7 @@
 
     {% if session.logged_in %}
     <div class="page-title">
-        <h3>Doorbell log</h3>
+        <h3>Doorbell log <form class="pull-right" action="/delete-log/all" method="post"><input type="submit" class="btn btn-xs btn-danger" value="Clear logs"></form></h3>
     </div>
     <table class="table table-striped table-hover">
         <thead>
