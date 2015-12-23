@@ -156,9 +156,10 @@ GPIO.setup(gpio_bell, GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
 
 <ul>
 <li>Pull-up: Always has some current flowing through it ad has three states: ON, OFF and FLOATING.</li>
-<li>Pull-down: Is connect to ground internally and has two states: ON and OFF (high/low).
-Therefore it makes sense to pick 'Pull-down' for this setup, as we only want to know if someone rings the doorbell. And we are certainly not interested in a floating state, where you cannot do much about with logically, as it is no boolean value.</li>
+<li>Pull-down: Is connect to ground internally and has two states: ON and OFF (high/low).</li>
 </ul>
+
+<p>Therefore it makes sense to pick 'Pull-down' for this setup, as we only want to know if someone rings the doorbell. And we are certainly not interested in a floating state, where you cannot do much about with logically, as it is no boolean value.</p>
 
 <pre><code>...
 # Set an even detection on the channel to detect voltage/button presses
