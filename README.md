@@ -16,11 +16,12 @@ __Check [my Github page](http://pysint.github.io/DoorPy)!__
 Below a guideline for the installation of DoorPy, it might be incorrect.. Don't blame me for that!
 
 * Fulfil all dependecies:<br/>
-`apt-get install python python-pip apache2 libapache2-mod-wsgi upstart`
+`apt-get install python python-pip apache2 libapache2-mod-wsgi upstart python-dev libffi-dev virtualenv` and<br/>
+`sudo pip install virtualenv`
 * Clone the repository into `/var/www/DoorPy`.
 * Install dependecies by using pip:<br/>`pip install -r requirements.txt`
 * Setup Apache:
-  * Edit `/etc/apach2/sites-enabled/doorpy.conf`, to contain the following:
+  * Edit `/etc/apache2/sites-enabled/doorpy.conf`, to contain the following:
     ```
      <VirtualHost *:80>
                 ServerName [name]
